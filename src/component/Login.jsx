@@ -1,4 +1,4 @@
-import { getAuth, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
+import { GoogleAuthProvider, signInWithRedirect, signOut } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
@@ -6,6 +6,7 @@ import { useEffect } from "react";
 
 function Login() {
   const [currentUser, setCurrentUser] = useState([]);
+  const [showUser, setShowUser] = useState(false);
 
   //Sign in Redirect
   const signInWithGoogle = () => {
@@ -14,8 +15,15 @@ function Login() {
   };
 
   //Sign out
-  const signOut = () => {
-    signOut(getAuth());
+  const signOutUser = () => {
+    signOut(auth)
+      .then(() => {
+        //Sign-out Successful.
+        console.log(auth);
+      })
+      .catch((error) => {
+        console.log("Sign out error : ", error);
+      });
   };
 
   //Get a user's profile (When log it shows 2 times)
@@ -23,25 +31,44 @@ function Login() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
+        setShowUser(true);
       } else {
         console.log("User is null");
+        setShowUser(false);
       }
     });
   }, []);
 
-  console.log(currentUser);
+  //console.log(currentUser);
 
   return (
     <div>
       <div>
-        <img src={currentUser.photoURL} alt="avatar" />
-        {currentUser.displayName}
+        {!showUser ? (
+          <>
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png"
+              alt="avatar"
+              className="w-14 h-14"
+            />
+            {(currentUser.displayName = "NULL")}
+          </>
+        ) : (
+          <>
+            <img
+              src={currentUser.photoURL}
+              alt="avatar"
+              className="w-14 h-14 rounded-full"
+            />
+            {currentUser.displayName}
+          </>
+        )}
       </div>
       <div>
         <button className="bg-sky-500" onClick={signInWithGoogle}>
           Sign In
         </button>
-        <button className="bg-orange-600" onClick={signOut}>
+        <button className="bg-orange-600" onClick={signOutUser}>
           Sign Out
         </button>
       </div>
