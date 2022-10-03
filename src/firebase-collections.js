@@ -1,4 +1,4 @@
-import { collection, limit, orderBy, query } from "firebase/firestore";
+import { collection, limit, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "./firebase-config";
 
 export const collectionMessagesRef = collection(db, "messages");

@@ -10,7 +10,6 @@ import { useState } from "react";
 import { auth } from "../../firebase-config";
 import Login from "../Login";
 import ChatBox from "./ChatBox";
-import User from "./User";
 
 function Chat() {
   //Current user
@@ -43,9 +42,10 @@ function Chat() {
         //user signIn succeed.
         setCurrentUser(user);
         setStatusSignIn(true);
+        //console.log(user);
       } else {
         //User is not sign-in
-        console.log("User is not sign-in");
+        //console.log("User is not sign-in");
         setStatusSignIn(false);
       }
     });
@@ -64,10 +64,7 @@ function Chat() {
           />
         </div>
       </div>
-      <div className="flex">
-        <User />
-        <ChatBox currentUser={currentUser}/>
-      </div>
+      <ChatBox currentUser={currentUser} statusSignIn={statusSignIn} />
     </div>
   );
 }
